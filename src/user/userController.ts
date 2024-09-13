@@ -6,6 +6,7 @@ import { sign } from "jsonwebtoken";
 import userModel from "./userModel";
 import { config } from "../config/config";
 import { User } from "./userType";
+import { access } from "fs";
 // types for controllers
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
     //validate the request
@@ -52,4 +53,37 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
         return next(createHttpError(500, "Error while creating user"));
     }
 };
-export { createUser };
+const loginUser = async (req: Request, res: Response, next: NextFunction) => {
+    const { email, password } = req.body;
+    //validation
+    if (!email || !password) {
+        return next(createHttpError(400, "All fields are required"));
+    }
+    //user check is not exists
+    let user: User | null;
+    try {
+        user = await userModel.findOne({ email });
+        if (!user) {
+            return next(createHttpError(404, "User not exists"));
+        }
+    } catch (error) {
+        return next(createHttpError(500, "error while checking user"));
+    }
+    //verify
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+        return next(createHttpError(400, "Credential not match"));
+    }
+    let token;
+    try {
+        token = sign({ sub: user._id }, config.jwt as string, {
+            expiresIn: "1d",
+        });
+    } catch (error) {
+        return next(createHttpError(500, "error while creating token"));
+    }
+    res.status(200).json({
+        accessToken: token,
+    });
+};
+export { createUser, loginUser };
