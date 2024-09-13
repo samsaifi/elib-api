@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import createHttpError from "http-errors";
+import bcrypt from "bcrypt";
+//localFiles
 import userModel from "./userModel";
 // types for controllers
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -9,25 +11,14 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
         const error = createHttpError(400, "All fields must be provided");
         return next(error);
     }
-    //save to db
+    //check user exists
     const user = await userModel.findOne({ email });
     if (user) {
         const error = createHttpError(400, "Email already exists");
         return next(error);
     }
-    //process
-    const newUser = new userModel({ name, email, password });
-    await newUser.save();
-    //send confirmation email
-    //send verification link (token) to user email
-    //send welcome email to new user
-    //set token in cookie or JWT token in response header
-    //send response with token or jwt token
-    //set token in cookie or JWT token in response header
-    //send response with token or jwt token
-    //send response with token or jwt token
-    //set token in cookie or JWT token in response header
-    //generate token
+    //save to db
+    const hashedPassword = await bcrypt.hash(password, 10);
     //send response
     return res.json({ message: "user created" });
 };
