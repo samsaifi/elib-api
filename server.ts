@@ -1,1 +1,1 @@
-console.log("welcome to ts");
+console.log("welcome to ts ");
