@@ -5,5 +5,6 @@ const _config = {
     port: process.env.PORT,
     mongo_db: process.env.MONGO_CONNECTION_STRING,
     env: process.env.NODE_ENV,
+    jwt: process.env.JWT_SECRET,
 };
 export const config = Object.freeze(_config);
