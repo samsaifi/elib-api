@@ -43,8 +43,9 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
             return next(createHttpError(500, "error while creating token"));
         }
         //send response
-        return res.json({
+        return res.status(201).json({
             accessToken: token,
+            success: true,
             message: "user created",
         });
     } catch (error) {
