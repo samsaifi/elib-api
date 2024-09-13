@@ -51,6 +51,8 @@ const createBook = async (req: Request, res: Response, next: NextFunction) => {
         return next(createHttpError(500, "error while delete file "));
     }
     //process
+    //@ts-ignore
+    console.log("user", req.userId);
     const newBook = await bookModel.create({
         title,
         genre,
