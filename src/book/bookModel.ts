@@ -22,9 +22,5 @@ const bookSchema = new mongoose.Schema<Book>({
         type: String,
         required: true,
     },
-    fileName: {
-        type: String,
-        default: null,
-    },
 });
 export default mongoose.model<Book>("Book", bookSchema);
