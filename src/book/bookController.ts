@@ -5,7 +5,11 @@ import createHttpError from "http-errors";
 import bookModel from "./bookModel";
 import fs from "node:fs";
 import { AuthRequest } from "../middleware/authenticate";
-import { coverImageMimeType } from "../utils/helper";
+import {
+    coverImageMimeType,
+    getBookImagePublicId,
+    getCoverImagePublicId,
+} from "../utils/helper";
 const createBook = async (req: Request, res: Response, next: NextFunction) => {
     const { title, genre } = req.body;
     // console.log(req.files);
@@ -115,6 +119,18 @@ const updateBook = async (req: Request, res: Response, next: NextFunction) => {
         completeFileName = uploadResultPdf.secure_url;
         await fs.promises.unlink(bookFilePath);
     }
+    const coverImagePublicId = getCoverImagePublicId(book);
+    const bookImagePublicId = getBookImagePublicId(book);
+    try {
+        await cloudinary.uploader.destroy(coverImagePublicId);
+        await cloudinary.uploader.destroy(bookImagePublicId, {
+            resource_type: "raw",
+        });
+    } catch (error) {
+        return next(
+            createHttpError(500, "Error while delete files from cloudinary"),
+        );
+    }
     //process
     const updatedBook = await bookModel.findOneAndUpdate(
         {
@@ -167,14 +183,8 @@ const deleteBook = async (req: Request, res: Response, next: NextFunction) => {
         if (book.author.toString() !== _req.userId) {
             return next(createHttpError(403, "Unauthorized"));
         }
-        const coverFileSplit = book.coverImage.split("/");
-        const coverImagePublicId =
-            coverFileSplit.at(-2) +
-            "/" +
-            coverFileSplit.at(-1)?.split(".").at(-2);
-        const bookFileSplit = book.file.split("/");
-        const bookImagePublicId =
-            bookFileSplit.at(-2) + "/" + bookFileSplit.at(-1);
+        const coverImagePublicId = getCoverImagePublicId(book);
+        const bookImagePublicId = getBookImagePublicId(book);
         try {
             await cloudinary.uploader.destroy(coverImagePublicId);
             await cloudinary.uploader.destroy(bookImagePublicId, {
