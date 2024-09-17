@@ -16,7 +16,7 @@ const authenticate = (req: Request, res: Response, next: NextFunction) => {
         const _req = req as AuthRequest;
         _req.userId = decoded.sub as string;
     } catch (error) {
-        return next(createHttpError(401, "token expired"));
+        return next(createHttpError(401, "Token expired"));
     }
     // console.log(decoded);
     next();

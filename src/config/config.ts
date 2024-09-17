@@ -1,5 +1,4 @@
 import { config as conf } from "dotenv";
-import { mongo } from "mongoose";
 conf();
 const _config = {
     port: process.env.PORT,

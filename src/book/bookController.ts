@@ -4,6 +4,7 @@ import path from "node:path";
 import createHttpError from "http-errors";
 import bookModel from "./bookModel";
 import fs from "node:fs";
+import { log } from "node:console";
 const createBook = async (req: Request, res: Response, next: NextFunction) => {
     const { title, genre } = req.body;
     // console.log(req.files);
@@ -40,15 +41,17 @@ const createBook = async (req: Request, res: Response, next: NextFunction) => {
             format: "pdf",
         });
         // console.log(bookFileUploadResult);
-    } catch (error) {
+    } catch (error: any) {
+        console.log(error.message);
         return next(createHttpError(500, "Error while uploading files"));
     }
     //delete file
     try {
         await fs.promises.unlink(filePath);
         await fs.promises.unlink(bookFilePath);
-    } catch (error) {
-        return next(createHttpError(500, "error while delete file "));
+    } catch (error: any) {
+        console.log(error.message);
+        return next(createHttpError(500, "Error while delete file "));
     }
     //process
     //@ts-ignore
@@ -56,7 +59,7 @@ const createBook = async (req: Request, res: Response, next: NextFunction) => {
     const newBook = await bookModel.create({
         title,
         genre,
-        author: "66e4097fa836d025a8db1c4b",
+        author: req.userId,
         coverImage: uploadResult.secure_url,
         file: bookFileUploadResult.secure_url,
     });
