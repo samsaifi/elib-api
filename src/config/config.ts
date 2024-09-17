@@ -10,5 +10,6 @@ const _config = {
         apiKey: process.env.CLOUD_API_KEY,
         apiSecret: process.env.CLOUD_API_SECRET,
     },
+    frontendDomain: process.env.FRONTEND_DOMAIN,
 };
 export const config = Object.freeze(_config);
