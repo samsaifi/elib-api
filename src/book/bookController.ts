@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import cloudinary from "../config/cloudinary";
-import path from "node:path";
+import path, { resolve } from "node:path";
 import createHttpError from "http-errors";
 import bookModel from "./bookModel";
 import fs from "node:fs";
@@ -153,17 +153,21 @@ const updateBook = async (req: Request, res: Response, next: NextFunction) => {
     res.status(201).json(updatedBook);
 };
 const getBooks = async (req: Request, res: Response, next: NextFunction) => {
+    const sleep = await new Promise((resolve) => setTimeout(resolve, 2000));
     try {
-        const books = await bookModel.find();
+        const books = await bookModel.find().populate("author", "name");
         return res.status(200).json(books);
     } catch (error) {
         return next(createHttpError(500, "Error while getting books"));
     }
 };
 const getBook = async (req: Request, res: Response, next: NextFunction) => {
+    const sleep = await new Promise((resolve) => setTimeout(resolve, 2000));
     const _id = req.params.id;
     try {
-        const book = await bookModel.findOne({ _id });
+        const book = await bookModel
+            .findOne({ _id })
+            .populate("author", "name");
         if (!book) {
             return next(createHttpError(404, "Book not found"));
         }
