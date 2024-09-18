@@ -27,7 +27,7 @@ export default function Navbar() {
                             className="text-4xl   font-mono flex items-center gap-2 md:gap-2"
                         >
                             <FaBook className="w-6 h-6 fill-green-600" />
-                            <div className="text-xl font-bold lg:text-2xl">
+                            <div className="text-xl text-red-600 font-bold lg:text-2xl">
                                 E<span className="text-green-600">Book</span>
                             </div>
                         </Link>
@@ -46,18 +46,18 @@ export default function Navbar() {
                     <section className="flex items-center gap-2">
                         <Link
                             href="/"
-                            className="text-2xl   px-4 py-2 font-mono flex items-center gap-2 md:gap-2"
+                            className="  border   px-4 py-2 font-mono flex items-center gap-2 md:gap-2"
                         >
-                            <div className="text-xl font-bold lg:text-2xl">
-                                log<span className="text-green-600">In</span>
+                            <div className="text-xl     ">
+                                Log<span className="text-green-600">In</span>
                             </div>
                         </Link>
                         <Link
                             href="/"
-                            className="text-2xl   px-4 py-2 font-mono flex items-center gap-2 md:gap-2"
+                            className="   border  px-4 py-2 font-mono flex items-center gap-2 md:gap-2"
                         >
-                            <div className="text-xl font-bold lg:text-2xl">
-                                singn<span className="text-blue-600">In</span>
+                            <div className="text-xl     ">
+                                Sign <span className="text-blue-600">In</span>
                             </div>
                         </Link>
                     </section>
