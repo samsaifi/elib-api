@@ -153,7 +153,7 @@ const updateBook = async (req: Request, res: Response, next: NextFunction) => {
     res.status(201).json(updatedBook);
 };
 const getBooks = async (req: Request, res: Response, next: NextFunction) => {
-    const sleep = await new Promise((resolve) => setTimeout(resolve, 2000));
+    // const sleep = await new Promise((resolve) => setTimeout(resolve, 2000));
     try {
         const books = await bookModel.find().populate("author", "name");
         return res.status(200).json(books);
